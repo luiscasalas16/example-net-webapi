@@ -2,6 +2,7 @@
 using Api.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Api
 {
@@ -31,7 +32,27 @@ namespace Api
             try
             {
                 var persons = _repository.Persons.GetAllPersons();
-                
+
+                var personsResult = _mapper.Map<IEnumerable<PersonDtoRead>>(persons);
+
+                return Ok(personsResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("page")]
+        public IActionResult GetPagePerson([FromQuery] PersonParameters parameters)
+        {
+            try
+            {
+                var persons = _repository.Persons.GetPagePersons(parameters);
+
+                Response.Headers.Add("X-Pagination", persons.Meta);
+
                 var personsResult = _mapper.Map<IEnumerable<PersonDtoRead>>(persons);
 
                 return Ok(personsResult);

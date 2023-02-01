@@ -5,7 +5,8 @@ namespace Api.Contracts
     public interface IPersonRepository : IRepositoryBase<Person>
     {
         IEnumerable<Person> GetAllPersons();
-        Person GetPersonById(int personsId);
+        PageList<Person> GetPagePersons(PersonParameters parameters);
+        Person? GetPersonById(int personsId);
         void CreatePerson(Person person);
         void UpdatePerson(Person person);
         void DeletePerson(Person person);

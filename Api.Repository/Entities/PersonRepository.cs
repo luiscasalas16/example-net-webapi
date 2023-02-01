@@ -1,5 +1,6 @@
 ﻿using Api.Contracts;
 using Api.Entities;
+using Entities;
 
 namespace Api.Repository
 {
@@ -17,10 +18,31 @@ namespace Api.Repository
                 .ToList();
         }
 
-        public Person GetPersonById(int personId)
+        public PageList<Person> GetPagePersons(PersonParameters parameters)
+        {
+            var persons = FindAll();
+
+            SearchByName(ref persons, parameters);
+
+            var sortedPersons = SortHelper<Person>.ApplySort(persons, parameters.OrderBy);
+
+            return PageList<Person>.ToPagedList(sortedPersons,
+                parameters.PageNumber, 
+                parameters.PageSize);
+        }
+
+        private void SearchByName(ref IQueryable<Person> persons, PersonParameters parameters)
+        {
+            if (!persons.Any() || string.IsNullOrWhiteSpace(parameters.SearchName))
+                return;
+
+            persons = persons.Where(o => o.SearchName != null && o.SearchName.ToLower().Contains(parameters.SearchName.Trim().ToLower()));
+        }
+
+        public Person? GetPersonById(int personId)
         {
             return FindByCondition(o => o.Id.Equals(personId))
-                    .FirstOrDefault();
+                .FirstOrDefault();
         }
 
         public void CreatePerson(Person person)
