@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
+using NLog.LayoutRenderers;
 using NLog.Web;
 
 namespace Api
@@ -9,6 +10,9 @@ namespace Api
         public static void Main(string[] args)
         {
             // NLog: Setting up the configuration for a logger service.
+
+            NLog.GlobalDiagnosticsContext.Set("appbasepath", System.IO.Directory.GetCurrentDirectory());
+
             var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
             logger.Debug("init main");
@@ -18,7 +22,9 @@ namespace Api
                 var builder = WebApplication.CreateBuilder(args);
 
                 // Configure NLog.
+
                 builder.Logging.ClearProviders();
+
                 builder.Host.UseNLog();
 
                 // Cors extension.
