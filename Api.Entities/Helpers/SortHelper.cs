@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace Entities
+namespace Api.Entities
 {
 	public static class SortHelper<T>
 	{
