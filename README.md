@@ -1,4 +1,4 @@
-# net-webapi
+# example-net-webapi
 
 Proyecto de ejemplo de un web api modelo en .Net Core.
 -	Utiliza un patrón repositorio para mediar entre la aplicación y la base de datos.
